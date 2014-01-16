@@ -1,5 +1,5 @@
 // kotlin.rl written by Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-// Inpired by rust.rl and python.rl
+// Inpired by rust.rl, python.rl and haskell.rl
 
 /************************* Required for every parser *************************/
 #ifndef OHCOUNT_KOTLIN_PARSER_H
