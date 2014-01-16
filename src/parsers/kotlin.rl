@@ -47,15 +47,23 @@ enum {
     }
   }
 
+  action kotlin_comment_nc_res { kotlin_comment_nest_count = 0; }
+  action kotlin_comment_nc_inc { kotlin_comment_nest_count++; }
+  action kotlin_comment_nc_dec { kotlin_comment_nest_count--; }
+
   kotlin_line_comment = '//' @comment nonnewline*;
   kotlin_block_comment =
-    '/*' @comment (
+    '/*' >kotlin_comment_nc_res @comment (
       newline %{ entity = INTERNAL_NL; } %kotlin_ccallback
       |
       ws
       |
+      '/*' @kotlin_comment_nc_inc @comment
+      |
+      '*/' @kotlin_comment_nc_dec @comment
+      |
       (nonnewline - ws) @comment
-    )* :>> '*/';
+    )* :>> ('*/' when { kotlin_comment_nest_count == 0 }) @comment;
   kotlin_comment = kotlin_line_comment | kotlin_block_comment;
 
   kotlin_dq_str =
@@ -153,6 +161,8 @@ void parse_kotlin(char *buffer, int length, int count,
              void *userdata
   ) {
   init
+
+  int kotlin_comment_nest_count = 0;
 
   %% write init;
   cs = (count) ? kotlin_en_kotlin_line : kotlin_en_kotlin_entity;
