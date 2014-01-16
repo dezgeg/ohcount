@@ -75,9 +75,7 @@ enum {
       |
       ws
       |
-      [^\t "\\] @code
-      |
-      '\\' nonnewline @code
+      [^\t ] @code
     )* '"""';
   kotlin_string = kotlin_dq_str | kotlin_raw_str;
 
